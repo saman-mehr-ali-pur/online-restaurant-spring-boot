@@ -1,5 +1,6 @@
 package com.online_restaurant.backend.model;
 
+import com.online_restaurant.backend.model.Enum.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class User {
     private String email;
     private Date birthdate;
     private Date signupDate;
+    private Role role;
 
 }
