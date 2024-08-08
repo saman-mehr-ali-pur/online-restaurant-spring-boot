@@ -10,6 +10,10 @@ public class FoodImg {
 
     private int id;
     private String path;
-    private Food food;
+    private Integer foodId;
 
+    public FoodImg(String path, Integer foodId) {
+        this.path = path;
+        this.foodId = foodId;
+    }
 }

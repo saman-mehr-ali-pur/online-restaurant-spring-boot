@@ -23,11 +23,11 @@ public class UserRepo implements BaseRepo<User>{
     private DateFormating dateFormating;
 
     @Override
-    public List<User> getAll(User ob) {
+    public List<User> getAll(User ob,int limit) {
         PreparedStatement prs;
         List<User> users = new ArrayList<>();
         try {
-           prs = connection.prepareStatement("call find_all");
+           prs = connection.prepareStatement("call find_all(%d)".formatted(limit));
            ResultSet rs = prs.executeQuery();
 
            while (rs.next()){
