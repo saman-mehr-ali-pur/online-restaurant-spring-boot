@@ -38,6 +38,14 @@ public class ImageIo {
 
 
 
+    public byte[] getImage(String path) throws IOException {
+        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(path));
+       byte[] bytes = bin.readAllBytes();
+       bin.close();
+       return bytes;
+
+    }
+
     public boolean deleteImage(String path){
 
         if (!Files.exists(Paths.get(path))){

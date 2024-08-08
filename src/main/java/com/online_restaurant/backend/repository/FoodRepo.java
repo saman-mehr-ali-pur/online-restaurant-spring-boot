@@ -1,17 +1,21 @@
 package com.online_restaurant.backend.repository;
 
+import com.online_restaurant.backend.ioUtil.ImageIo;
 import com.online_restaurant.backend.model.Enum.FoodType;
 import com.online_restaurant.backend.model.Food;
 import com.online_restaurant.backend.util.DateFormating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class FoodRepo implements  BaseRepo<Food>{
@@ -20,6 +24,9 @@ public class FoodRepo implements  BaseRepo<Food>{
     private Connection connection;
     @Autowired
     private DateFormating formating;
+
+    @Autowired
+    private ImageIo imageIo;
 
 
     @Override
@@ -172,7 +179,7 @@ public class FoodRepo implements  BaseRepo<Food>{
             statement.execute(q3);
             statement.close();
             if (rowCount == 0){
-                return false
+                return false;
             }
             else {
                 return true;
@@ -202,11 +209,59 @@ public class FoodRepo implements  BaseRepo<Food>{
             if (rowCount==0){
                 return false;
             }
+            else
+                return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
 
-        return true;
     }
+
+
+    public boolean saveImg(Food food,byte[] bytes,String suffix) throws IOException {
+        UUID uuid = UUID.randomUUID();
+        String filename = uuid.toString()+food.getName();
+        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/"+filename+suffix;
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("start transaction");
+            statement.executeUpdate(String.format("insert into food_img (path,foodId) values (%s,%d)",
+                    fullPath,food.getId()));
+
+            statement.execute("commit");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+       return imageIo.saveImage(filename,"/home/saman-mehr-ali-pur/restaurant/images/food",bytes);
+
+    }
+
+
+    public byte[][] getImages(Food food){
+
+        final String q1 = "start transaction";
+        final String q2 = String.format("select path from food_img where food_id=%d",food.getId());
+        final String q3 = "commit";
+        List<byte[]>  bytes;
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(q1);
+            ResultSet rs = statement.executeQuery(q2);
+            statement.execute(q3);
+            bytes = new ArrayList<>();
+            while (rs.next()){
+                bytes.add(imageIo.getImage(rs.getString("path")));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return bytes.toArray(byte[][]::new);
+    }
+
 }
