@@ -1,8 +1,10 @@
 package com.online_restaurant.backend.repository;
 
+import com.online_restaurant.backend.model.Address;
 import com.online_restaurant.backend.model.Enum.Role;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.util.DateFormating;
+import com.sun.tools.jconsole.JConsoleContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +25,7 @@ public class UserRepo implements BaseRepo<User>{
     private DateFormating dateFormating;
 
     @Override
-    public List<User> getAll(User ob,int limit) {
+    public List<User> getAll(int limit) {
         PreparedStatement prs;
         List<User> users = new ArrayList<>();
         try {
@@ -178,6 +180,62 @@ public class UserRepo implements BaseRepo<User>{
     }
 
 
+
+
+    public List<Address> getAllAddresses(User user){
+        List<Address> addresses = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+
+            statement.execute("start transaction");
+            ResultSet rs =statement.executeQuery("select * from addresses where userId= "+user.getId());
+            statement.execute("commit");
+            while ((rs.next())){
+                Address address = new Address();
+                address.setId(rs.getInt("id"));
+                address.setPostalCode(rs.getString("postal_code"));
+                address.setUser(user);
+                address.setAddress(rs.getString("addr"));
+                addresses.add(address);
+            }
+
+            statement.close();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    return addresses;
+    }
+
+
+
+    public Address addAddAddress(User user,Address address){
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("start transaction");
+            int rowcount = statement.executeUpdate(String.format("insert into Address (addr,postal_code,userId) values (%s,%s,%d) ",
+                    address.getAddress(),address.getPostalCode(),address.getUser().getId()));
+            ResultSet rs = statement.executeQuery(String.format("select id from address where userId=%d and postal_code=%s ",
+                    user.getId(),address.getPostalCode()));
+            statement.execute("commit");
+            if (rowcount==0){
+                return null;
+            }
+            if(rs.next()){
+                address.setId(rs.getInt("id"));
+            }
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return address;
+    }
 
 
 }

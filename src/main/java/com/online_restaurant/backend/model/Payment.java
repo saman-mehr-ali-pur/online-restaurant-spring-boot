@@ -12,7 +12,7 @@ public class Payment {
 
     private Integer id;
     private Double amount;
-    private Double status;
+    private Boolean status;
     private Order order;
 
 

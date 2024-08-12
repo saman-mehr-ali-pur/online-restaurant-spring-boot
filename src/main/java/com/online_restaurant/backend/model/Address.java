@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class Address {
 
     private Integer id;
+    private String address;
     private String postalCode;
     private User user;
 

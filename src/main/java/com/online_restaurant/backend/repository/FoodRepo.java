@@ -30,7 +30,7 @@ public class FoodRepo implements  BaseRepo<Food>{
 
 
     @Override
-    public List<Food> getAll(Food ob , int limit) {
+    public List<Food> getAll( int limit) {
 
         Statement statement ;
 

@@ -20,4 +20,11 @@ public class Order {
     private List<Food> foodList;
     private Payment payment;
 
+
+
+    public Double tatalPrice(){
+        return  foodList.stream().map(Food::getPrice).
+                reduce( 0.0,Double::sum);
+    }
+
 }
