@@ -1,13 +1,14 @@
 package com.online_restaurant.backend.service;
 
 
+import java.util.List;
 
 public interface BaseService<T> {
 
 
     T get(int id);
-    T getAll();
+    List<T> getAll(int limit);
     T save(T ob);
-    T update(T ob);
+    boolean update(T ob);
     boolean delete(int id);
 }
