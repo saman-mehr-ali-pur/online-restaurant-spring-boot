@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 
 @Repository
@@ -175,22 +176,25 @@ public class OrderRepo implements BaseRepo<Order>{
         Statement statement;
         final String q1 = "Start transaction";
         final String q2 = String.format("insert into orders (userId) values (%d)",ob.getCustomer().getId());
-        final String q3 = String.format("select MAX(id) from orders");
+        final String q3 = String.format("select MAX(id) id from orders");
         final String q4 = "commit";
 
         try {
             statement =connection.createStatement();
             statement.execute(q1);
             int rowCount = statement.executeUpdate(q2);
-            statement.execute(q3);
-
+            ResultSet rs = statement.executeQuery(q3);
+            statement.execute(q4);
+            if (rs.next()){
+                ob.setId(rs.getInt("id"));
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
 
-        return null;
+        return ob;
     }
 
     @Override
@@ -240,7 +244,7 @@ public class OrderRepo implements BaseRepo<Order>{
 
     public boolean addFood(Food food,Order order){
         final String q1 = "start transaction";
-        final String q2 = String.format("insert into food_order (foodId,orderid) values (%d,%d)",
+        final String q2 = String.format("insert into food_order (foodId,orderId) values (%d,%d)",
                 food.getId(),order.getId());
         final String q3 = "commit";
 

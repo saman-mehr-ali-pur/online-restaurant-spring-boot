@@ -20,6 +20,10 @@ public class UserService implements BaseService<User>{
         return userRepo.get(id);
     }
 
+    public User get(User user){
+        return userRepo.get(user);
+    }
+
     @Override
     public List<User> getAll(int limit) {
         return userRepo.getAll(limit);

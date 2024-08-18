@@ -69,8 +69,8 @@ public class CommentRepo  {
                 comment.getComment());
 
         final String q3 = "select MAX(id) id from comments";
-        final String q4 = String.format("insert into  user_comment_food (userId,foodId,commentId) values (%d,%d,%d)",
-                user.getId(),food.getId(),comment.getId());
+//        final String q4 = String.format("insert into  user_comment_food (userId,foodId,commentId) values (%d,%d,%d)",
+//                user.getId(),food.getId(),comment.getId());
 
         final String q5 = "commit";
 
@@ -83,7 +83,8 @@ public class CommentRepo  {
             ResultSet rs =statement.executeQuery(q3);
             if (rs.next())
                 comment.setId(rs.getInt("id"));
-            int rowCount2 = statement.executeUpdate(q4);
+            int rowCount2 = statement.executeUpdate(String.format("insert into  user_comment_food (userId,foodId,commentId) values (%d,%d,%d)",
+                    user.getId(),food.getId(),comment.getId()));
             statement.execute(q5);
 
 

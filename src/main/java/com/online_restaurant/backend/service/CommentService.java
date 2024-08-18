@@ -20,8 +20,8 @@ public class CommentService {
     }
 
 
-    public Comment save(User user , Food food, Comment comment){
-        return commentRepo.saveComment(user,food,comment);
+    public Comment save( Comment comment){
+        return commentRepo.saveComment(comment.getUser(),comment.getFood(),comment);
     }
 
 
