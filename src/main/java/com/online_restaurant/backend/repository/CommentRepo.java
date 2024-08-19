@@ -38,7 +38,7 @@ public class CommentRepo  {
             statement = connection.createStatement();
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            statement.execute(q3);
+
             while (rs.next()){
                 Comment comment = new Comment();
                 comment.setId(rs.getInt("id"));
@@ -52,6 +52,7 @@ public class CommentRepo  {
                 comments.add(comment);
 
             }
+            statement.execute(q3);
             statement.close();
 
         } catch (SQLException e) {
@@ -85,6 +86,8 @@ public class CommentRepo  {
                 comment.setId(rs.getInt("id"));
             int rowCount2 = statement.executeUpdate(String.format("insert into  user_comment_food (userId,foodId,commentId) values (%d,%d,%d)",
                     user.getId(),food.getId(),comment.getId()));
+
+
             statement.execute(q5);
 
 
@@ -100,17 +103,17 @@ public class CommentRepo  {
 
         final String q1 = "start transaction";
         final String q2 = "delete from comments where id ="+comment.getId();
-        final String q3 = String.format("delete from user_comment_food where commentId=%d",comment.getId());
+//        final String q3 = String.format("delete from user_comment_food where commentId=%d",comment.getId());
         final String q4 = "commit";
 
         try {
             Statement statement = connection.createStatement();
             statement.execute(q1);
             int rc1 = statement.executeUpdate(q2);
-            int rc2 =statement.executeUpdate(q3);
+//            int rc2 =statement.executeUpdate(q3);
             statement.execute(q4);
-            if (rc2==0 && rc1==0)
-                return false;
+            if ( rc1==0) return false;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

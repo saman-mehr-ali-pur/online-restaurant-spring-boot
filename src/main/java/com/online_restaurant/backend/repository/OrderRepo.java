@@ -4,6 +4,7 @@ import com.online_restaurant.backend.model.Food;
 import com.online_restaurant.backend.model.Order;
 import com.online_restaurant.backend.model.Payment;
 import com.online_restaurant.backend.model.User;
+import com.online_restaurant.backend.util.DateFormating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -23,6 +25,8 @@ public class OrderRepo implements BaseRepo<Order>{
 
     @Autowired
     private Connection connection;
+    @Autowired
+    private DateFormating dateFormating;
 
     @Override
     public List<Order> getAll(int limit) {
@@ -34,7 +38,7 @@ public class OrderRepo implements BaseRepo<Order>{
                 "on fd.id = fo.foodId " +
                 "inner join users ur " +
                 "on ur.id=ord.userId ";
-        final String q3 = "select py.id id , py.amount amount,py.datePay datePay ,py.status status, ord.id orderId, " +
+        final String q3 = "select py.id id , py.amount amount,py.datePay datePay ,py.status status, ord.id orderId " +
                 " from orders ord inner join " +
                 "payments py on py.orderId= ord.id";
         final String q4 = "commit" ;
@@ -44,8 +48,8 @@ public class OrderRepo implements BaseRepo<Order>{
 
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            ResultSet rs2 = statement.executeQuery(q3);
-            statement.execute(q4);
+
+
             Order order;
             while (rs.next()){
                 order = new Order();
@@ -74,12 +78,12 @@ public class OrderRepo implements BaseRepo<Order>{
                 order.getFoodList().add(food);
             }
 
-
+            ResultSet rs2 = statement.executeQuery(q3);
             while (rs2.next()){
                 Payment payment = new Payment();
                 payment.setId(rs2.getInt("id"));
-                payment.setStatus(rs.getBoolean("status"));
-                payment.setAmount(rs.getDouble("amount"));
+                payment.setStatus(rs2.getBoolean("status"));
+                payment.setAmount(rs2.getDouble("amount"));
                 Optional<Order> ord =  result.stream().
                         filter(item -> {
                             try {
@@ -96,7 +100,7 @@ public class OrderRepo implements BaseRepo<Order>{
 
 
             }
-
+            statement.execute(q4);
             statement.close();
 
         } catch (SQLException e) {
@@ -130,8 +134,6 @@ public class OrderRepo implements BaseRepo<Order>{
 
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            ResultSet rs2 = statement.executeQuery(q3);
-            statement.execute(q4);
             User user = new User();
            order = new Order();
             List<Food> foods = new ArrayList<>();
@@ -152,16 +154,18 @@ public class OrderRepo implements BaseRepo<Order>{
 
 
             order.setFoodList(foods);
+            ResultSet rs2 = statement.executeQuery(q3);
 
             Payment payment= new Payment();
             if(rs2.next()){
                 payment.setId(rs2.getInt("id"));
-                payment.setStatus(rs.getBoolean("status"));
-                payment.setAmount(rs.getDouble("amount"));
-                payment.setOrder(order);
+                payment.setStatus(rs2.getBoolean("status"));
+                payment.setAmount(rs2.getDouble("amount"));
+//                payment.setOrder(order);
                 order.setPayment(payment);
             }
-
+            statement.execute(q4);
+            statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -176,19 +180,31 @@ public class OrderRepo implements BaseRepo<Order>{
         Statement statement;
         final String q1 = "Start transaction";
         final String q2 = String.format("insert into orders (userId) values (%d)",ob.getCustomer().getId());
-        final String q3 = String.format("select MAX(id) id from orders");
+//        final String q3 = "select MAX(id) id from orders";
+//        final String q5 = "insert into payments (amount,datePay,status,orderId) values " +
+//                "(%f,\"%s\",%b,%d)";
         final String q4 = "commit";
 
         try {
             statement =connection.createStatement();
             statement.execute(q1);
             int rowCount = statement.executeUpdate(q2);
-            ResultSet rs = statement.executeQuery(q3);
-            statement.execute(q4);
-            if (rs.next()){
-                ob.setId(rs.getInt("id"));
-            }
+//            ResultSet rs = statement.executeQuery(q3);
+//            if (rs.next()){
+//                ob.setId(rs.getInt("id"));
+//            }
+    //            statement.executeUpdate(String.format(q5,0.0,dateFormating.format("yyyy-MM-dd",new Date()),
+    //                    false,ob.getId()));
+           ResultSet rs = statement.executeQuery("select * from payments where orderId= "+ob.getId());
 
+            if (rs.next()){
+                Payment payment = new Payment();
+                payment.setId(rs.getInt("id"));
+                payment.setAmount(rs.getDouble("amount"));
+                payment.setStatus(rs.getBoolean("status"));
+                ob.setPayment(payment);
+            }
+            statement.execute(q4);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -201,14 +217,18 @@ public class OrderRepo implements BaseRepo<Order>{
     public boolean delete(Order ob) {
         final String q1 = "start transaction";
         final String q2 = "delete from orders where id= "+ob.getId();
+        final String q4 = "delete from payments where orderId= "+ob.getId();
         final String q3 = "commit";
 
         try (java.sql.Statement statement  = connection.createStatement()) {
             statement.execute(q1);
-            int rowCount = statement.executeUpdate(q2);
+            int rowCount = statement.executeUpdate(q4);
+            if (rowCount!=0)
+                rowCount = statement.executeUpdate(q2);
             statement.execute(q3);
             if (rowCount!=0)
                 return true;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

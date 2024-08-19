@@ -1,7 +1,7 @@
 package com.online_restaurant.backend.controller.api;
 
-import com.online_restaurant.backend.model.Order;
-import com.online_restaurant.backend.service.OrderService;
+import com.online_restaurant.backend.model.Food;
+import com.online_restaurant.backend.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,36 +12,36 @@ import java.util.List;
 public class FoodController {
 
     @Autowired
-    private OrderService orderService;
+    private FoodService foodService;
 
 
     @GetMapping("/all")
-    public List<Order> getAllOrders(@RequestParam("limit") int limit){
-        return orderService.getAll(limit);
+    public List<Food> getAllOrders(@RequestParam("limit") int limit){
+        return foodService.getAll(limit);
     }
 
     @GetMapping("/get/{id}")
-    public Order get(@PathVariable("id") int id){
-        return orderService.get(id);
+    public Food get(@PathVariable("id") int id){
+        return foodService.get(id);
     }
 
 
     @PostMapping
-    public Order save(@RequestBody Order order){
-       return orderService.save(order);
+    public Food save(@RequestBody Food food){
+       return foodService.save(food);
     }
 
 
     @DeleteMapping("/delete/{id}")
     public boolean deleteOrder(@PathVariable("id") int id){
-        return orderService.delete(id);
+        return foodService.delete(id);
     }
 
 
 
     @PostMapping("update")
-    public boolean updateOrder(@RequestBody Order order){
-        return orderService.update(order);
+    public boolean updateOrder(@RequestBody Food food){
+        return foodService.update(food);
     }
 
 }

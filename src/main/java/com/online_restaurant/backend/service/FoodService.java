@@ -4,10 +4,12 @@ import com.online_restaurant.backend.ioUtil.ImageIo;
 import com.online_restaurant.backend.model.Food;
 import com.online_restaurant.backend.repository.FoodRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 
+@Service
 public class FoodService implements BaseService<Food>{
 
     @Autowired

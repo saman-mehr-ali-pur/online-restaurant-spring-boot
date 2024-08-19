@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/order")
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
 
@@ -19,6 +20,7 @@ public class OrderController {
 
     @GetMapping("/all")
     public List<Order> getAll(@RequestParam("limit") int limit){
+        System.out.println(limit);
         return orderService.getAll(limit);
     }
 
@@ -45,8 +47,8 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("delete")
-    public boolean deleteOrder(@RequestParam("orderId") int id){
+    @DeleteMapping("delete/{id}")
+    public boolean deleteOrder(@PathVariable("id") int id){
         return orderService.delete(id);
     }
 

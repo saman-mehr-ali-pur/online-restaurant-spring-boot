@@ -35,8 +35,8 @@ public class FoodRepo implements  BaseRepo<Food>{
         Statement statement ;
 
         final String q1 = "start transaction";
-        final  String q2 = String.format("select * from foods limits 30 offset=%d",30*(limit-1));
-        final String q3 = "select path,foodId from food f" +
+        final  String q2 = String.format("select * from foods limit 30 offset %d",30*(limit-1));
+        final String q3 = "select path,foodId from foods f" +
                 " inner join food_img img " +
                 "on f.id=img.foodId";
         final String q4 = "commit";
@@ -47,8 +47,7 @@ public class FoodRepo implements  BaseRepo<Food>{
             statement = connection.createStatement();
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            ResultSet imgset = statement.executeQuery(q3);
-            statement.execute(q4);
+
 
             while (rs.next()){
                 Food food = new Food();
@@ -56,10 +55,11 @@ public class FoodRepo implements  BaseRepo<Food>{
                 food.setName(rs.getString("name"));
                 food.setPrice(rs.getDouble("price"));
                 food.setStatus(rs.getBoolean("status"));
-                food.setType(FoodType.valueOf(rs.getString("typ")));
+                food.setType(FoodType.valueOf(rs.getString("typ").toUpperCase()));
                 result.add(food);
 
             }
+            ResultSet imgset = statement.executeQuery(q3);
 
             while (imgset.next()){
 
@@ -76,7 +76,7 @@ public class FoodRepo implements  BaseRepo<Food>{
                 }
 
             }
-
+            statement.execute(q4);
             statement.close();
 
 
@@ -104,8 +104,8 @@ public class FoodRepo implements  BaseRepo<Food>{
             statement = connection.createStatement();
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            ResultSet imgs = statement.executeQuery(q3);
-            statement.execute(q4);
+
+
 
 
             if (rs.next()){
@@ -116,6 +116,8 @@ public class FoodRepo implements  BaseRepo<Food>{
                 food.setStatus(rs.getBoolean("status"));
                 food.setDescription(rs.getString("description"));
                 food.setType(FoodType.valueOf(rs.getString("typ")));
+
+                ResultSet imgs = statement.executeQuery(q3);
                 if (imgs.next()) {
                     food.setImagePath(new ArrayList<>());
                     food.getImagePath().add(imgs.getString("path"));
@@ -127,7 +129,7 @@ public class FoodRepo implements  BaseRepo<Food>{
                     }
                 }
             }
-
+            statement.execute(q4);
             statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -250,11 +252,12 @@ public class FoodRepo implements  BaseRepo<Food>{
             Statement statement = connection.createStatement();
             statement.execute(q1);
             ResultSet rs = statement.executeQuery(q2);
-            statement.execute(q3);
+
             bytes = new ArrayList<>();
             while (rs.next()){
                 bytes.add(imageIo.getImage(rs.getString("path")));
             }
+            statement.execute(q3);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
