@@ -4,7 +4,6 @@ import com.online_restaurant.backend.model.Address;
 import com.online_restaurant.backend.model.Enum.Role;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.util.DateFormating;
-import com.sun.tools.jconsole.JConsoleContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -97,7 +96,8 @@ public class UserRepo implements BaseRepo<User>{
                 user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
                 user.setEmail(rs.getString("email"));
                 user.setBirthdate(rs.getDate("birthdate"));
-                user.setSignupDate(rs.getDate("singup_date"));
+                user.setSignupDate(rs.getDate("signup_date"));
+                user.setAddresses(getAllAddresses(user));
                 statement.execute(q3);
             }else{
                 statement.execute(q3);
@@ -217,59 +217,101 @@ public class UserRepo implements BaseRepo<User>{
 
 
 
-    public List<Address> getAllAddresses(User user){
-        List<Address> addresses = new ArrayList<>();
+    public Address getAllAddresses(User user){
+        Address address = new Address();
         try {
             Statement statement = connection.createStatement();
 
             statement.execute("start transaction");
             ResultSet rs =statement.executeQuery("select * from addresses where userId= "+user.getId());
-            statement.execute("commit");
-            while ((rs.next())){
-                Address address = new Address();
+
+            if ((rs.next())){
+//                address = new Address();
                 address.setId(rs.getInt("id"));
                 address.setPostalCode(rs.getString("postal_code"));
-                address.setUser(user);
+//                address.setUser(user);
                 address.setAddress(rs.getString("addr"));
-                addresses.add(address);
+                statement.execute("commit");
+                statement.close();
+            }
+            else {
+                statement.execute("commit");
+                statement.close();
+                return null;
             }
 
-            statement.close();
 
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-    return addresses;
+    return address;
     }
 
 
 
-    public Address addAddAddress(User user,Address address){
+    public Address addAddress(Address address){
 
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute("start transaction");
-            int rowcount = statement.executeUpdate(String.format("insert into Address (addr,postal_code,userId) values (%s,%s,%d) ",
-                    address.getAddress(),address.getPostalCode(),address.getUser().getId()));
-            ResultSet rs = statement.executeQuery(String.format("select id from address where userId=%d and postal_code=%s ",
-                    user.getId(),address.getPostalCode()));
-            statement.execute("commit");
-            if (rowcount==0){
+        final String q1 ="start transaction";
+        final String q2 = String.format("insert into addresses (addr,userId,postal_code) values (\"%s\",%d,\"%s\")",
+                address.getAddress(),
+                address.getUser().getId(),
+                address.getPostalCode());
+
+        final String q3 = "select id from addresses where userId ="+address.getUser().getId();
+        final String q4 = "commit";
+
+        try(Statement statement =connection.createStatement()){
+            statement.execute(q1);
+            int rowcount = statement.executeUpdate(q2);
+            ResultSet rs;
+            if (rowcount!=0){
+
+                rs = statement.executeQuery(q3);
+                if (rs.next()){
+                    System.out.println("id: "+rs.getInt("id"));
+                    address.setId(rs.getInt("id"));
+                }
+                statement.execute(q4);
+                statement.close();
+            }
+
+            else {
+                statement.execute(q4);
+                statement.close();
+
                 return null;
             }
-            if(rs.next()){
-                address.setId(rs.getInt("id"));
-            }
 
-
+            statement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         return address;
+    }
+
+    public boolean UpadteAddAddress(Address address){
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("start transaction");
+            int rowcount = statement.executeUpdate(String.format("update addresses set addr=\"%s\" where id=%d",address.getAddress(),address.getId()));
+            statement.execute("commit");
+            if (rowcount==0){
+                return false;
+            }
+           statement.close();
+
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
 

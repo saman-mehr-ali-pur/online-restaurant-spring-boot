@@ -56,4 +56,7 @@ public class FoodService implements BaseService<Food>{
         return foodRepo.getImages(food);
     }
 
+    public byte[] getImage(String filePath) throws IOException {
+        return  imageIo.getImage(filePath);
+    }
 }

@@ -2,6 +2,7 @@ package com.online_restaurant.backend.model;
 
 import com.online_restaurant.backend.model.Enum.FoodType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Food {
 
     private  Integer id;
@@ -21,5 +23,6 @@ public class Food {
     private List<String> imagePath;
     private List<Comment> comments;
     private List<User> likes;
+    private Integer number;
 
 }

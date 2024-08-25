@@ -1,6 +1,7 @@
 package com.online_restaurant.backend.service;
 
 
+import com.online_restaurant.backend.model.Address;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +45,18 @@ public class UserService implements BaseService<User>{
         User user =new User();
         user.setId(id);
         return userRepo.delete(user);
+    }
+
+
+    public Address addAddress(Address address){
+        return userRepo.addAddress(address);
+    }
+
+    public Address getAddress(User user){
+        return userRepo.getAllAddresses(user);
+    }
+
+    public boolean updateAddress(Address address){
+        return userRepo.UpadteAddAddress(address);
     }
 }

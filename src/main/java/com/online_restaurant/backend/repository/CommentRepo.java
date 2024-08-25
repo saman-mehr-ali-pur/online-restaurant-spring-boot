@@ -26,8 +26,10 @@ public class CommentRepo  {
     public List<Comment> getAllCommentByFood(Food food ,int limit){
 
         final String q1 = "start transaction";
-        final String q2 = String.format("select c.id id, usf.foodID foodId, usf.userId userId, c.comment comment  from user_comment_food usf inner join" +
+        final String q2 = String.format("select c.id id,users.username username, usf.foodID foodId, usf.userId userId, c.comment comment  from user_comment_food usf inner join" +
                 " comments c on usf.commentId=c.id " +
+                "inner join users " +
+                "on users.id=usf.userId  " +
                 "where usf.foodId=%d limit 30 offset %d",food.getId(),(limit -1)*30);
         final String q3 = "commit";
 
@@ -44,7 +46,7 @@ public class CommentRepo  {
                 comment.setId(rs.getInt("id"));
                 comment.setComment(rs.getString("comment"));
                 User user = new User();
-                user.setId(rs.getInt("userId"));
+                user.setUsername(rs.getString("username"));
                 comment.setUser(user);
                 Food food1 = new Food();
                 food1.setId(rs.getInt("foodId"));
@@ -66,7 +68,7 @@ public class CommentRepo  {
     public Comment saveComment(User user,Food food,Comment comment){
 
         final String q1  = "start transaction";
-        final String q2 = String.format("insert into comments (comment,date) values (%s,now())",
+        final String q2 = String.format("insert into comments (comment,date) values (\"%s\",now())",
                 comment.getComment());
 
         final String q3 = "select MAX(id) id from comments";

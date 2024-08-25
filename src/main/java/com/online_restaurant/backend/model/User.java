@@ -2,6 +2,7 @@ package com.online_restaurant.backend.model;
 
 import com.online_restaurant.backend.model.Enum.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
 
@@ -21,6 +23,6 @@ public class User {
     private Date birthdate;
     private Date signupDate;
     private Role role;
-    private List<Address> addresses;
+    private Address addresses;
 
 }

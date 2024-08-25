@@ -3,6 +3,7 @@ package com.online_restaurant.backend.repository;
 import com.online_restaurant.backend.ioUtil.ImageIo;
 import com.online_restaurant.backend.model.Enum.FoodType;
 import com.online_restaurant.backend.model.Food;
+import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.util.DateFormating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,7 +37,7 @@ public class FoodRepo implements  BaseRepo<Food>{
 
         final String q1 = "start transaction";
         final  String q2 = String.format("select * from foods limit 30 offset %d",30*(limit-1));
-        final String q3 = "select path,foodId from foods f" +
+        final String q3 = "select img.id id,  path,foodId from foods f" +
                 " inner join food_img img " +
                 "on f.id=img.foodId";
         final String q4 = "commit";
@@ -55,6 +56,7 @@ public class FoodRepo implements  BaseRepo<Food>{
                 food.setName(rs.getString("name"));
                 food.setPrice(rs.getDouble("price"));
                 food.setStatus(rs.getBoolean("status"));
+                food.setDescription(rs.getString("description"));
                 food.setType(FoodType.valueOf(rs.getString("typ").toUpperCase()));
                 result.add(food);
 
@@ -96,7 +98,7 @@ public class FoodRepo implements  BaseRepo<Food>{
         Statement statement ;
         final String q1 = "start transaction";
         final String q2 = String.format("select * from foods where id=%d",id);
-        final String q3 = String.format("select * from img_food where food_id = %d",id);
+        final String q3 = String.format("select * from food_img where foodId = %d",id);
         final String q4 = "commit";
         Food food=null;
 
@@ -115,7 +117,7 @@ public class FoodRepo implements  BaseRepo<Food>{
                 food.setPrice(rs.getDouble("price"));
                 food.setStatus(rs.getBoolean("status"));
                 food.setDescription(rs.getString("description"));
-                food.setType(FoodType.valueOf(rs.getString("typ")));
+                food.setType(FoodType.valueOf(rs.getString("typ").toUpperCase()));
 
                 ResultSet imgs = statement.executeQuery(q3);
                 if (imgs.next()) {
@@ -196,9 +198,9 @@ public class FoodRepo implements  BaseRepo<Food>{
     @Override
     public boolean update(Food ob) {
         final String q1 = "start transaction";
-        final String q2 = String.format("update foods set name=%s,price=%f,description=%s,status=%b,typ=%s " +
+        final String q2 = String.format("update foods set name=\"%s\",price=%f,description=\"%s\",status=%b,typ=\"%s\" " +
                         "where id=%d",
-                ob.getName(),ob.getPrice(),ob.getDescription(),ob.getStatus(),ob.getStatus().toString(),ob.getId());
+                ob.getName(),ob.getPrice(),ob.getDescription(),ob.getStatus(),ob.getType().toString(),ob.getId());
         final String q3 = "commit";
         Statement statement ;
         try {
@@ -224,7 +226,7 @@ public class FoodRepo implements  BaseRepo<Food>{
     public boolean saveImg(Food food,byte[] bytes,String suffix) throws IOException {
         UUID uuid = UUID.randomUUID();
         String filename = uuid.toString()+food.getName();
-        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/"+filename+suffix;
+        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/"+filename+"."+suffix;
         try {
             Statement statement = connection.createStatement();
             statement.execute("start transaction");
@@ -245,7 +247,7 @@ public class FoodRepo implements  BaseRepo<Food>{
     public byte[][] getImages(Food food){
 
         final String q1 = "start transaction";
-        final String q2 = String.format("select path from food_img where food_id=%d",food.getId());
+        final String q2 = String.format("select path from food_img where foodId=%d",food.getId());
         final String q3 = "commit";
         List<byte[]>  bytes;
         try {
@@ -258,6 +260,7 @@ public class FoodRepo implements  BaseRepo<Food>{
                 bytes.add(imageIo.getImage(rs.getString("path")));
             }
             statement.execute(q3);
+            statement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -266,5 +269,8 @@ public class FoodRepo implements  BaseRepo<Food>{
         }
         return bytes.toArray(byte[][]::new);
     }
+
+
+
 
 }

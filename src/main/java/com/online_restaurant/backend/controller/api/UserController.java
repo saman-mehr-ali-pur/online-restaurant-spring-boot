@@ -1,6 +1,8 @@
 package com.online_restaurant.backend.controller.api;
 
 import com.online_restaurant.backend.exception.NotFoundException;
+import com.online_restaurant.backend.model.Address;
+import com.online_restaurant.backend.model.Enum.Role;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
@@ -25,6 +28,7 @@ public class UserController {
 
     @PostMapping("/get")
     public User getUser(@RequestBody User user){
+        System.out.println(user);
         System.out.println(user);
         String username = user.getUsername();
         user = userService.get(user);
@@ -43,7 +47,8 @@ public class UserController {
     @PostMapping("/save")
     public User saveUser(@RequestBody User user){
 
-        System.out.println(user.toString());
+        System.out.println(user);
+//        user.setRole(Role.USER);
         return userService.save(user);
     }
 
@@ -58,6 +63,26 @@ public class UserController {
     public boolean updateUser(@RequestBody User user){
         return userService.update(user);
     }
+
+
+    @GetMapping("/address")
+    public Address getAddress(@RequestBody User user){
+        user = userService.get(user);
+        return userService.getAddress(user);
+    }
+
+    @PostMapping("/address")
+    public Address addAddress(@RequestBody Address address){
+        return userService.addAddress(address);
+    }
+
+
+    @PatchMapping("/address")
+    public boolean updateAddress(@RequestBody Address address){
+        System.out.println("udate address");
+        return  userService.updateAddress(address);
+    }
+
 
 
 }
