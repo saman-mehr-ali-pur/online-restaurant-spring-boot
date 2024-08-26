@@ -237,6 +237,12 @@ END;
 
 
 
+create trigger delete_food after delete on foods
+
+for each row
+begin
+    delete from food_order where foodId=
+
 DELIMITER ;
 
 

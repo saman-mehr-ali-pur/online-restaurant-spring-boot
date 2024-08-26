@@ -146,9 +146,9 @@ public class FoodRepo implements  BaseRepo<Food>{
         Statement statement ;
         final String q1 = "start transaction";
         final String q2 = String.format("insert into foods (name,price,description,status,typ) " +
-                "values (%s,%f,%s,%b,%s) ",ob.getName(),ob.getPrice(),ob.getDescription(),ob.getStatus(),
+                "values (\"%s\",%f,\"%s\",%b,\"%s\") ",ob.getName(),ob.getPrice(),ob.getDescription(),ob.getStatus(),
                 ob.getType().toString());
-        final String q3 = String.format("select id from foods where name=%d",ob.getName());
+        final String q3 = String.format("select id from foods where name=\"%s\"",ob.getName());
         final String q4 = "commit";
         try {
             statement = connection.createStatement();
@@ -225,12 +225,12 @@ public class FoodRepo implements  BaseRepo<Food>{
 
     public boolean saveImg(Food food,byte[] bytes,String suffix) throws IOException {
         UUID uuid = UUID.randomUUID();
-        String filename = uuid.toString()+food.getName();
-        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/"+filename+"."+suffix;
+        String filename = uuid.toString()+food.getId();
+        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/food/"+filename+"."+suffix;
         try {
             Statement statement = connection.createStatement();
             statement.execute("start transaction");
-            statement.executeUpdate(String.format("insert into food_img (path,foodId) values (%s,%d)",
+            statement.executeUpdate(String.format("insert into food_img (path,foodId) values (\"%s\",%d)",
                     fullPath,food.getId()));
 
             statement.execute("commit");
@@ -239,7 +239,7 @@ public class FoodRepo implements  BaseRepo<Food>{
             throw new RuntimeException(e);
         }
 
-       return imageIo.saveImage(filename,"/home/saman-mehr-ali-pur/restaurant/images/food",bytes);
+       return imageIo.saveImage(filename+"."+suffix,"/home/saman-mehr-ali-pur/restaurant/images/food",bytes);
 
     }
 

@@ -11,19 +11,22 @@ import java.nio.file.Paths;
 public class ImageIo {
 
 
-    public boolean saveImage(String pathDir, String fileName,byte[] bytes) throws IOException {
-
+    public boolean saveImage( String fileName,String pathDir,byte[] bytes) throws IOException {
+        System.out.println(fileName);
         File dir = new File(pathDir);
+        System.out.println(Files.exists(Paths.get(pathDir)));
         if (!Files.exists(Paths.get(pathDir))){
             try {
-                Files.createFile(Paths.get(pathDir));
+                System.out.println("create dir");
+
+                Files.createDirectory(Paths.get(pathDir));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
 
-        String fullPath = pathDir+fileName;
+        String fullPath = pathDir+"/"+fileName;
         File imgFile = new File(fullPath);
         if(!imgFile.exists()){
             imgFile.createNewFile();

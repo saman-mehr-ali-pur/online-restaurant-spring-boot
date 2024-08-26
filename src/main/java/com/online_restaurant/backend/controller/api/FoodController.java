@@ -33,9 +33,11 @@ public class FoodController {
     }
 
 
-    @PostMapping
+    @PostMapping("/save")
     public Food save(@RequestBody Food food){
-       return foodService.save(food);
+
+        System.out.println(food );
+        return foodService.save(food);
     }
 
 
@@ -69,9 +71,11 @@ public class FoodController {
                              @PathVariable("foodId") int id) throws IOException {
         byte[] bytes = file.getBytes();
         int lastIndexOfDot = file.getOriginalFilename().lastIndexOf(".");
+        System.out.println(file.getOriginalFilename().substring(lastIndexOfDot+1));
         return  foodService.saveImg(bytes,
                 Food.builder().id(id).build(),
                 file.getOriginalFilename().substring(lastIndexOfDot+1));
+
     }
 
 }

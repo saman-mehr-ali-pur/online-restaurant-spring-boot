@@ -29,7 +29,7 @@ public class FoodService implements BaseService<Food>{
 
     @Override
     public Food save(Food ob) {
-        return null;
+        return foodRepo.save(ob);
     }
 
     @Override
