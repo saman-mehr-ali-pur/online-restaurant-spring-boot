@@ -6,6 +6,7 @@ import com.online_restaurant.backend.model.Food;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.util.DateFormating;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ public class FoodRepo implements  BaseRepo<Food>{
 
     @Autowired
     private ImageIo imageIo;
+
+    @Value(("${root-path}"))
+    private String root;
 
 
     @Override
@@ -226,7 +230,7 @@ public class FoodRepo implements  BaseRepo<Food>{
     public boolean saveImg(Food food,byte[] bytes,String suffix) throws IOException {
         UUID uuid = UUID.randomUUID();
         String filename = uuid.toString()+food.getId();
-        String fullPath = "/home/saman-mehr-ali-pur/restaurant/images/food/"+filename+"."+suffix;
+        String fullPath = root+"/images/food/"+filename+"."+suffix;
         try {
             Statement statement = connection.createStatement();
             statement.execute("start transaction");
@@ -239,7 +243,7 @@ public class FoodRepo implements  BaseRepo<Food>{
             throw new RuntimeException(e);
         }
 
-       return imageIo.saveImage(filename+"."+suffix,"/home/saman-mehr-ali-pur/restaurant/images/food",bytes);
+       return imageIo.saveImage(filename+"."+suffix,root+"/images/food",bytes);
 
     }
 

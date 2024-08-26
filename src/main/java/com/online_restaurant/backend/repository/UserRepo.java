@@ -38,7 +38,7 @@ public class UserRepo implements BaseRepo<User>{
 //               user.setPassword();
                user.setBirthdate(new Date(rs.getDate("birthdate").getTime()));
                user.setEmail(rs.getString("email"));
-               user.setSignupDate(new Date(rs.getDate("singup_date").getTime()));
+               user.setSignupDate(new Date(rs.getDate("signup_date").getTime()));
                user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
                users.add(user);
            }

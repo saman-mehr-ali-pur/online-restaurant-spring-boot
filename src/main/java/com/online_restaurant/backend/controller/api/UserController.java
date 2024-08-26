@@ -6,6 +6,7 @@ import com.online_restaurant.backend.model.Enum.Role;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -19,9 +20,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/all")
     public List<User> getAll(@RequestParam("limit") int limit){
+//        System.out.println("root"+root);
         return userService.getAll(limit);
     }
 
