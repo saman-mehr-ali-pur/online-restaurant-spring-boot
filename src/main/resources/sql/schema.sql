@@ -265,4 +265,4 @@ insert into food_order (foodId,orderId,num) VALUES (2,1,4);
 UPDATE food_order set num =5 where foodId=1 and orderId=1;
 
 
---DELETE from food_order where foodId=2 and orderId=1;
+
