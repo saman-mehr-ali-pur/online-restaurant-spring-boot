@@ -10,9 +10,9 @@ import java.sql.SQLException;
 
 @Configuration
 public class Confige {
-    private final String url = "jdbc:mysql://localhost:3306/new_restaurant";
+    private final String url = "jdbc:mysql://localhost:3306/restaurant";
     private final String username = "root";
-    private final String password = "Saman1382!";
+    private final String password = "123456789";
     @Bean
     public Connection getConnection(){
         Connection connection;
