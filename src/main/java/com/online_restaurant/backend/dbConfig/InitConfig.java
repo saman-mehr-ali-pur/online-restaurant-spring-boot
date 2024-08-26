@@ -16,8 +16,9 @@ public class InitConfig implements CommandLineRunner {
     private String root;
     @Override
     public void run(String... args) throws Exception {
-        Path path = Paths.get(root);
+        Path path = Paths.get(root+"/restaurant");
         if (!Files.exists(path)){
+            System.out.println("create directory");
             Files.createDirectory(path);
         }
     }
