@@ -1,8 +1,11 @@
 -- Active: 1720792668180@@127.0.0.1@3306
-CREATE DATABASE new_restaurant;
+
+drop database if exists restaurant;
 
 
-use new_restaurant;
+CREATE DATABASE restaurant;
+
+use restaurant;
 
 
 
@@ -15,7 +18,7 @@ CREATE table users(
     signup_date date,
     role ENUM("ADMIN","USER","DELIVERER") NOT NULL,
     constraint user_pk PRIMARY KEY(id)
-)
+);
 
 CREATE Table foods (
     id BIGINT AUTO_INCREMENT,
@@ -25,7 +28,7 @@ CREATE Table foods (
     status BOOLEAN not null,
     typ ENUM('main', 'salad', 'drink', 'dessert'),
     constraint food_pk PRIMARY KEY(id)
-)
+);
 
 
 CREATE Table orders (
@@ -35,7 +38,7 @@ CREATE Table orders (
     addressId BIGINT ,
     constraint order_pk PRIMARY KEY(id),
     constraint user_fk FOREIGN KEY(userId) REFERENCES users(id)
-)
+);
 
 
 CREATE table payments (
@@ -46,7 +49,7 @@ CREATE table payments (
     orderId BIGINT NOT null,
     constraint pay_pk PRIMARY KEY(id),
     constraint order_fk FOREIGN KEY(id) REFERENCES orders(id)
-)
+);
 
 
 
@@ -57,7 +60,7 @@ CREATE Table likes (
     constraint like_pk PRIMARY KEY(id),
     constraint food_fk FOREIGN KEY(foodId) REFERENCES foods(id),
     constraint like_user_fk FOREIGN Key (userId) REFERENCES users(id)
-)
+);
 
 
 
@@ -67,7 +70,7 @@ CREATE Table food_img (
     foodId BIGINT not null,
     constraint img_pk PRIMARY KEY(id),
     constraint food_img_fk FOREIGN KEY(foodId) REFERENCES foods(id)
-)
+);
 
 
 
@@ -76,7 +79,7 @@ CREATE Table comments(
     comment TEXT not null,
     date DATETIME not null,
     constraint commnet_pk PRIMARY KEY(id)
-)
+);
 
 
 CREATE Table user_comment_food (
@@ -88,7 +91,7 @@ CREATE Table user_comment_food (
     constraint FOREIGN KEY(userId) REFERENCES users(id),
     constraint FOREIGN KEY(foodId) REFERENCES foods(id),
     constraint FOREIGN KEY(commentId) REFERENCES comments(id)
-)
+);
 
 
 
@@ -98,7 +101,7 @@ CREATE Table user_profile_img (
     userId BIGINT not null,
     constraint img_pk PRIMARY KEY(id),
     constraint user_img_fk FOREIGN KEY(userId) REFERENCES users(id)
-)
+);
 
 
 CREATE Table addresses(
@@ -108,8 +111,7 @@ CREATE Table addresses(
     userId BIGINT not null unique,
     constraint PRIMARY KEY(id),
     constraint user_addr_fk FOREIGN KEY(userId) REFERENCES users(id)
-)
-
+);
 
 CREATE Table food_order(
     id BIGINT AUTO_INCREMENT,
@@ -119,7 +121,7 @@ CREATE Table food_order(
     constraint PRIMARY KEY(id) ,
     constraint FOREIGN KEY(foodId) REFERENCES foods(id),
     constraint FOREIGN KEY(orderId) REFERENCES orders(id)
-)
+);
 
 
 DELIMITER //
@@ -237,11 +239,6 @@ END;
 
 
 
-create trigger delete_food after delete on foods
-
-for each row
-begin
-    delete from food_order where foodId=
 
 DELIMITER ;
 
@@ -258,14 +255,14 @@ insert into foods (name ,price ,description,status) VALUES ("pizza",12000,"this 
 
 insert into foods (name ,price ,description,status) VALUES ("pizza2",9000,"this pizza2",1);
 
-insert into orders (userId,delivererId) VALUES (4,1);
+insert into orders (userId,delivererId) VALUES (3,2);
 
 
 insert into food_order (foodId,orderId,num) VALUES (1,1,3);
 
-insert into food_order (foodId,orderId,num) VALUES (2,2,4);
+insert into food_order (foodId,orderId,num) VALUES (2,1,4);
 
 UPDATE food_order set num =5 where foodId=1 and orderId=1;
 
 
-DELETE from food_order where foodId=2 and orderId=1;
+--DELETE from food_order where foodId=2 and orderId=1;
