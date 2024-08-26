@@ -247,16 +247,16 @@ DELIMITER ;
 
 
 
-insert into users (username,password,email,birthdate,signup_date) VALUES ("saman","123456","saman@g.com",CURDATE(),now());
+insert into users (username,password,email,role,birthdate,signup_date) VALUES ("saman","123456","saman@g.com","ADMIN",CURDATE(),now());
 
-insert into users (username,password,email,birthdate,signup_date) VALUES ("saman2","1232456","saman2@g.com",CURDATE(),now());
+insert into users (username,password,email,role,birthdate,signup_date) VALUES ("saman2","1232456","saman2@g.com","DELIVERER",CURDATE(),now());
 
-insert into users (username,password,email,birthdate,signup_date) VALUES ("saman3","12w32456","saman3@g.com",CURDATE(),now());
+insert into users (username,password,email,role,birthdate,signup_date) VALUES ("saman3","12w32456","saman3@g.com","USER",CURDATE(),now());
 
-insert into foods (name ,price ,description,status) VALUES ("pizza",12000,"this pizza",0);
+insert into foods (name ,price ,description,status) VALUES ("pizza",12000,"this pizza",1);
 
 
-insert into foods (name ,price ,description,status) VALUES ("pizza2",12000,"this pizza2",0);
+insert into foods (name ,price ,description,status) VALUES ("pizza2",9000,"this pizza2",1);
 
 insert into orders (userId,delivererId) VALUES (4,1);
 
