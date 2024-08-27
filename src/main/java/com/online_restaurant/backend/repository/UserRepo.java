@@ -65,7 +65,7 @@ public class UserRepo implements BaseRepo<User>{
                 user.setUsername("username");
                 user.setEmail(rs.getString("email"));
                 user.setBirthdate(new Date(rs.getDate("birthdate").getTime()));
-                user.setSignupDate(new Date(rs.getDate("singup_date").getTime()));
+                user.setSignupDate(new Date(rs.getDate("signup_date").getTime()));
                 user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
                 return user;
             }
@@ -118,7 +118,7 @@ public class UserRepo implements BaseRepo<User>{
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         String q1 = "start transaction";
         StringBuffer q2 = new StringBuffer();
-        q2.append("insert into users (username,password,email,birthdate,singup_date,role) ");
+        q2.append("insert into users (username,password,email,birthdate,signup_date,role) ");
         q2.append(String.format("values (\"%s\",\"%s\",\"%s\",\"%s\",now(),\"%s\")",
                 ob.getUsername(),
                 ob.getPassword(),
