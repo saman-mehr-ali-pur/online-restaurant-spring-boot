@@ -230,7 +230,7 @@ public class FoodRepo implements  BaseRepo<Food>{
     public boolean saveImg(Food food,byte[] bytes,String suffix) throws IOException {
         UUID uuid = UUID.randomUUID();
         String filename = uuid.toString()+food.getId();
-        String fullPath = root+"/images/food/"+filename+"."+suffix;
+        String fullPath = root+"/restaurant/images/food/"+filename+"."+suffix;
         try {
             Statement statement = connection.createStatement();
             statement.execute("start transaction");
@@ -243,7 +243,7 @@ public class FoodRepo implements  BaseRepo<Food>{
             throw new RuntimeException(e);
         }
 
-       return imageIo.saveImage(filename+"."+suffix,root+"/images/food",bytes);
+       return imageIo.saveImage(filename+"."+suffix,root+"/restaurant/images/food",bytes);
 
     }
 
