@@ -1,60 +1,64 @@
 package com.online_restaurant.backend.repository;
 
-import com.online_restaurant.backend.model.Food;
+
+import com.online_restaurant.backend.model.Payment;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Repository
-public class FoodRepo {
 
+@Repository
+public class PaymentRepo {
 
     @Autowired
     private EntityManagerFactory emf;
 
-    public boolean addFood(Food food){
+
+
+    public void add(Payment payment){
+
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(food);
+        em.persist(payment);
         em.getTransaction().commit();
-        return true;
+
     }
 
 
-    public boolean updateFood(Food food){
+    public List<Payment> getAll(){
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Food food1 = em.find(Food.class,food.getId());
-        food1.setName(food.getName());
-        food1.setPrice(food.getPrice());
-        food1.setDescription(food.getDescription());
-        food1.setType(food.getType());
-        food1.setStatus(food.getStatus());
-        food1.setImagePath(food.getImagePath());
+        List<Payment> result = em.createQuery("select p from Payment as p ").getResultList();
         em.getTransaction().commit();
-        return true;
+        return result;
+
+    }
+
+    public void  update(Payment payment){
+
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Payment result = em.find(Payment.class,payment.getId());
+
+        result.setAmount(payment.getAmount());
+        result.setStatus(payment.getStatus());
+        result.setDatPay(payment.getDatPay());
+//        result.setOrder();
+        em.getTransaction().commit();
+
     }
 
 
-    public boolean removeFood(Food food){
+    public void remove(Payment payment){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.remove(food);
+        em.remove(payment);
         em.getTransaction().commit();
-        return true;
-    }
 
 
-    public List<Food> getAll(){
-
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        List<Food> foodList = em.createQuery("select f from Food f ",Food.class).getResultList();
-        em.getTransaction().commit();
-        return foodList;
     }
 
 }

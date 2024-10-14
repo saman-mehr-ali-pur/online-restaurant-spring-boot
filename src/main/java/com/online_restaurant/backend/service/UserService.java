@@ -1,62 +1,40 @@
 package com.online_restaurant.backend.service;
 
 
-import com.online_restaurant.backend.model.Address;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class UserService implements BaseService<User>{
+public class UserService {
 
     @Autowired
     private UserRepo userRepo;
 
 
-    @Override
-    public User get(int id) {
-        return userRepo.get(id);
+    public User findById(User user){
+
+        return userRepo.findById(user);
     }
 
-    public User get(User user){
-        return userRepo.get(user);
-    }
-
-    @Override
-    public List<User> getAll(int limit) {
-        return userRepo.getAll(limit);
-    }
-
-    @Override
-    public User save(User ob) {
-        return userRepo.save(ob);
-    }
-
-    @Override
-    public boolean  update(User ob) {
-        return userRepo.update(ob);
-    }
-
-    @Override
-    public boolean delete(int id) {
-        User user =new User();
-        user.setId(id);
-        return userRepo.delete(user);
+    public User findByUsername(User user){
+        return userRepo.findByUsername(user);
     }
 
 
-    public Address addAddress(Address address){
-        return userRepo.addAddress(address);
+    public boolean save(User user){
+        return userRepo.save(user);
     }
 
-    public Address getAddress(User user){
-        return userRepo.getAllAddresses(user);
+    public User update(User user){
+        return userRepo.update(user);
     }
 
-    public boolean updateAddress(Address address){
-        return userRepo.UpadteAddAddress(address);
+    public boolean remove(User user){
+        return userRepo.remove(user);
     }
+
+
+
 }

@@ -1,9 +1,7 @@
 package com.online_restaurant.backend.repository;
 
 
-import com.online_restaurant.backend.model.Comment;
-import com.online_restaurant.backend.model.Food;
-import com.online_restaurant.backend.model.User;
+import com.online_restaurant.backend.model.Address;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,64 +10,65 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CommentRepo {
+public class AddressRepo {
+
 
     @Autowired
     private EntityManagerFactory emf;
 
-    public Comment saveComment(Comment comment){
+    public boolean saveAddress(Address address){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(comment);
+        em.persist(address);
         em.getTransaction().commit();
-        return comment;
+        return true;
     }
 
 
-    public List<Comment> getAll(Food food , User user){
+    public Address find(Address address){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        List<Comment> reuslt = em.createQuery("select c from Comment as c where c.user= :user and c.food= :food").
-                setParameter("food",food)
-                .setParameter("user",user).getResultList();
+        Address result = (Address) em.createQuery("select ad from Address as ad where ad.getId = :id").setParameter("id",
+                address.getId()).getSingleResult();
 
         em.getTransaction().commit();
-
-        return  reuslt;
-    }
-
-
-    public Comment getById(Comment comment){
-
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Comment result = em.find(Comment.class,comment.getId());
-        em.getTransaction().commit();
-
         return result;
     }
 
 
-
-    public void update(Comment comment){
+    public List<Address> getAllAddress(){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Comment com = em.find(Comment.class,comment.getId());
-        com.setComment(comment.getComment());
+        List<Address> result = em.createQuery("select ad from Address ad ").getResultList();
         em.getTransaction().commit();
-//        return true;
+        return result;
+
     }
 
 
-    public void delete(Comment comment ){
+    public boolean remove(Address address){
+
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.remove(comment);
+        em.remove(address);
         em.getTransaction().commit();
-
+        return true;
     }
+
+
+    public boolean update(Address address){
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Address result = em.find(Address.class,address.getId());
+        result.setAddress(address.getAddress());
+        result.setPostalCode(address.getPostalCode());
+        result.setUser(address.getUser());
+        em.getTransaction().commit();
+        return true;
+    }
+
 
 }

@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 @Slf4j
 public class BackendApplication  {
 
-//	public static Logger logger=  LogManager.getLogger();
 	public static void main(String[] args) {
 		log.info("starting app");
 //		System.out.println("root: ");
