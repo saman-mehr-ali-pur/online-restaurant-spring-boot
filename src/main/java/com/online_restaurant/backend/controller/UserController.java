@@ -2,9 +2,11 @@ package com.online_restaurant.backend.controller;
 
 
 import com.online_restaurant.backend.model.User;
-import com.online_restaurant.backend.service.UserService;
+import com.online_restaurant.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -14,11 +16,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public User getUser(@PathVariable(name = "id") int id){
         User user = new User();
         user.setId(id);
-       return userService.findById(user);
+       return userService.get(id);
     }
 
 
@@ -26,15 +28,25 @@ public class UserController {
     public User getUser(@PathVariable(name = "username") String username){
         User user = new User();
         user.setUsername(username);
-        return userService.findByUsername(user);
+        return userService.getUsername(username);
     }
 
 
 
     @PostMapping
-    public boolean saveUser(@RequestBody User user ){
+    public User saveUser(@RequestBody User user ){
 
-        return  userService.save(user);
+        return  userService.addUser(user);
+    }
+
+    @GetMapping("/getall")
+    public List<User> getAll(){
+        return userService.getAll();
+    }
+
+    @PostMapping("/update")
+    public User update(@RequestBody User user){
+        return userService.update(user);
     }
 
 

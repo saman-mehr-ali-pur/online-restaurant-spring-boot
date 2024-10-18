@@ -6,6 +6,7 @@ import com.online_restaurant.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -17,10 +18,8 @@ public class UserService {
 
 
     public User addUser(User user){
-
         userRepo.save(user);
-        return user;
-
+       return user;
     }
 
 
@@ -35,8 +34,6 @@ public class UserService {
 
     public void delete(User user){
         userRepo.remove(user);
-
-
     }
 
 
@@ -57,6 +54,5 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         return userRepo.findByUsername(user);
-
     }
 }

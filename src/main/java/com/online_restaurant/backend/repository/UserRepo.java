@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Repository
@@ -20,7 +21,7 @@ public class UserRepo {
     public List<User> getAll(){
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        List<User> result = em.createQuery("select u from User u ").getResultList();
+        List<User> result = em.createQuery("select u from User u ",User.class).getResultList();
         em.getTransaction().commit();
 
         return result;
@@ -54,14 +55,19 @@ public class UserRepo {
     }
 
 
-    public boolean save(User user){
+    public void save(User user) {
 
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
-        em.persist(user);
+        try {
+            em.persist(user);
+        }catch (Exception e){
+            user = new User();
+            user.setId(-1);
+        }
+
         em.getTransaction().commit();
-        return true;
     }
 
     public User update(User user){
