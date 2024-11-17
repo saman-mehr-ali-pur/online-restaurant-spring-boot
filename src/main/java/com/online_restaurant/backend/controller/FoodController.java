@@ -28,6 +28,12 @@ public class FoodController {
         return foodService.getAll();
     }
 
+    @GetMapping("/get/id/{id}")
+    public Food getFoodById(@PathVariable int id){
+        Food food = new Food();
+        food.setId(id);
+        return foodService.get(food);
+    }
 
     @GetMapping("/get/{type}")
     public List<Food> getByType(@PathVariable("type")FoodType foodType){

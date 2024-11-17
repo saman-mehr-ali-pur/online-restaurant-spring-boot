@@ -61,8 +61,9 @@ public class FoodRepo {
     public Food get(Food food){
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Food food1 = em.find(Food.class,food);
+        Food food1 = em.find(Food.class,food.getId());
         em.getTransaction().commit();
+
         return food1;
 
     }

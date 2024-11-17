@@ -1,6 +1,9 @@
 package com.online_restaurant.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -23,11 +26,15 @@ public class Comment {
     @Size(max = 250)
     @NotNull
     private String comment;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id",name = "foodId",nullable = false)
+    @JsonBackReference
+//    @JsonIgnore
     private Food food;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="userId",referencedColumnName = "id",nullable = false)
+//    @JsonManagedReference
+//    @JsonIgnore
     private User user;
 
 }

@@ -1,6 +1,8 @@
 package com.online_restaurant.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,5 +29,6 @@ public class Address {
 //    @Column(name = "userId",nullable = false)
     @OneToOne(optional = true,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 }

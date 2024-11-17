@@ -1,5 +1,7 @@
 package com.online_restaurant.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.online_restaurant.backend.model.Enum.FoodType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -37,10 +39,9 @@ public class Food {
     private FoodType type;
     @OneToMany(mappedBy = "food")
     private List<Image> imagePath;
-    @OneToMany(mappedBy = "food")
+    @OneToMany(mappedBy = "food",fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Comment> comments;
-//
-//    private List<User> likes;
-//    private Integer number;
+
 
 }
