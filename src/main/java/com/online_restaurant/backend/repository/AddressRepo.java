@@ -2,6 +2,7 @@ package com.online_restaurant.backend.repository;
 
 
 import com.online_restaurant.backend.model.Address;
+import com.online_restaurant.backend.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,13 @@ public class AddressRepo {
     @Autowired
     private EntityManagerFactory emf;
 
-    public boolean saveAddress(Address address){
+    public void saveAddress(Address address){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(address);
         em.getTransaction().commit();
-        return true;
+//        return true;
     }
 
 
@@ -30,7 +31,7 @@ public class AddressRepo {
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Address result = (Address) em.createQuery("select ad from Address as ad where ad.getId = :id").setParameter("id",
+        Address result = (Address) em.createQuery("select ad from Address as ad where ad.id = :id").setParameter("id",
                 address.getId()).getSingleResult();
 
         em.getTransaction().commit();
@@ -49,10 +50,28 @@ public class AddressRepo {
     }
 
 
+
+    public List<Address> getAllAddress(User user) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        List<Address> result = em.createQuery(
+                        "SELECT ad FROM Address ad WHERE ad.user = :user", Address.class)
+                .setParameter("user", user)
+                .getResultList();
+        em.getTransaction().commit();
+        em.close();
+
+        result.stream().forEach( item -> {item.
+               setUser(null);});
+        return result;
+    }
+
+
     public boolean remove(Address address){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
+        address = em.find(Address.class,address.getId());
         em.remove(address);
         em.getTransaction().commit();
         return true;

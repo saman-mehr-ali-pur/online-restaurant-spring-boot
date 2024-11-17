@@ -27,13 +27,13 @@ public class CommentRepo {
     }
 
 
-    public List<Comment> getAll(Food food , User user){
+    public List<Comment> getAll(Food food ){
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        List<Comment> reuslt = em.createQuery("select c from Comment as c where c.user= :user and c.food= :food").
-                setParameter("food",food)
-                .setParameter("user",user).getResultList();
+        List<Comment> reuslt = em.createQuery("select c from Comment as c where c.food.id= :foodid").
+                setParameter("foodid",food.getId())
+                .getResultList();
 
         em.getTransaction().commit();
 

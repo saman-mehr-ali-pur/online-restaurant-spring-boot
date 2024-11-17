@@ -25,10 +25,7 @@ public class Address {
     @NotNull
     private String postalCode;
 //    @Column(name = "userId",nullable = false)
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(optional = true,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
-
-
-
 }

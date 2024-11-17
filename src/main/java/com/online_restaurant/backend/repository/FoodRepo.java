@@ -42,6 +42,7 @@ public class FoodRepo {
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
+        food = em.find(Food.class,food.getId());
         em.remove(food);
         em.getTransaction().commit();
         return true;
@@ -55,6 +56,15 @@ public class FoodRepo {
         List<Food> foodList = em.createQuery("select f from Food f ",Food.class).getResultList();
         em.getTransaction().commit();
         return foodList;
+    }
+
+    public Food get(Food food){
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Food food1 = em.find(Food.class,food);
+        em.getTransaction().commit();
+        return food1;
+
     }
 
 }

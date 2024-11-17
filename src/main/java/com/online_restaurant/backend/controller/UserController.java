@@ -18,8 +18,8 @@ public class UserController {
 
     @GetMapping("/get/{id}")
     public User getUser(@PathVariable(name = "id") int id){
-        User user = new User();
-        user.setId(id);
+//        User user = new User();
+//        user.setId(Integer.parseInt(id));
        return userService.get(id);
     }
 

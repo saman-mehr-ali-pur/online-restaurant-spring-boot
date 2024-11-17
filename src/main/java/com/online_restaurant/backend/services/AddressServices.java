@@ -41,7 +41,8 @@ public class AddressServices {
     }
 
 
-    public boolean Update(Address address){
-        return addressRepo.update(address);
+    public Address Update(Address address){
+         addressRepo.update(address);
+         return address;
     }
 }
