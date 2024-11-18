@@ -1,6 +1,9 @@
 package com.online_restaurant.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +21,9 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
+//    @JsonBackReference
     private User customer;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "deliver_id",referencedColumnName = "id")

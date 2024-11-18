@@ -26,9 +26,8 @@ public class Address {
     @Column(nullable = false)
     @NotNull
     private String postalCode;
-//    @Column(name = "userId",nullable = false)
     @OneToOne(optional = true,fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",referencedColumnName = "id")
-    @JsonIgnore
+    @JsonBackReference
     private User user;
 }

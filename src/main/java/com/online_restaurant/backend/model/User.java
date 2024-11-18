@@ -39,8 +39,8 @@ public class User {
     @Column(name = "ROLE",nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    @JsonManagedReference
     private Address address;
 
 }

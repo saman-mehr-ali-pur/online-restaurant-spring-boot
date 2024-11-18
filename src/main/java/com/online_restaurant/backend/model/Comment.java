@@ -29,12 +29,9 @@ public class Comment {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id",name = "foodId",nullable = false)
     @JsonBackReference
-//    @JsonIgnore
     private Food food;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="userId",referencedColumnName = "id",nullable = false)
-//    @JsonManagedReference
-//    @JsonIgnore
     private User user;
 
 }

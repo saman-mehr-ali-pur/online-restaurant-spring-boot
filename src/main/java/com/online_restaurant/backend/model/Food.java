@@ -39,7 +39,7 @@ public class Food {
     private FoodType type;
     @OneToMany(mappedBy = "food")
     private List<Image> imagePath;
-    @OneToMany(mappedBy = "food",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "food",fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comment> comments;
 
