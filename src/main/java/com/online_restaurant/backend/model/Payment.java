@@ -1,6 +1,7 @@
 package com.online_restaurant.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Payment {
     @Column
     private Boolean status;
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Order order;
     @Column
     @Temporal(TemporalType.TIMESTAMP)

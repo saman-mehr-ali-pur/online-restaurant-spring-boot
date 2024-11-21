@@ -3,6 +3,7 @@ package com.online_restaurant.backend.services;
 import com.online_restaurant.backend.model.Order;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.repository.OrderRepo;
+import com.online_restaurant.backend.repository.PaymentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
