@@ -4,6 +4,7 @@ package com.online_restaurant.backend.services;
 import com.online_restaurant.backend.model.User;
 import com.online_restaurant.backend.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -15,9 +16,12 @@ public class UserService {
 
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder encoder;
 
 
     public User addUser(User user){
+        user.setPassword(encoder.encode(user.getPassword()));
         userRepo.save(user);
        return user;
     }

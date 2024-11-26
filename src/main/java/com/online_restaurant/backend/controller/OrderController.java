@@ -36,7 +36,7 @@ public class OrderController {
         return orderService.get(user);
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/delete/{id}")
     public void removeOrder(@PathVariable("id") int id){
         Order order = new Order();
         order.setId(id);

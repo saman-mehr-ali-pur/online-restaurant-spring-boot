@@ -24,7 +24,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/{username}")
+    @GetMapping("/get/{username}")
     public User getUser(@PathVariable(name = "username") String username){
         User user = new User();
         user.setUsername(username);
@@ -33,7 +33,7 @@ public class UserController {
 
 
 
-    @PostMapping
+    @PostMapping("/save")
     public User saveUser(@RequestBody User user ){
 
         return  userService.addUser(user);
@@ -44,7 +44,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @PostMapping("/update")
+    @PatchMapping("/update")
     public User update(@RequestBody User user){
         return userService.update(user);
     }

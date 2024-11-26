@@ -23,7 +23,7 @@ public class FoodController {
         return food;
     }
 
-    @GetMapping("/get")
+    @GetMapping("/getall")
     public List<Food> getAll(){
         return foodService.getAll();
     }

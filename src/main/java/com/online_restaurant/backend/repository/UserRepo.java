@@ -96,6 +96,18 @@ public class UserRepo {
     }
 
 
+    public void updatePassword(User user,String newPassword){
+
+        EntityManager em  = emf.createEntityManager();
+        em.getTransaction();
+        user = em.find(User.class,user);
+        user.setPassword(newPassword);
+        em.getTransaction().commit();
+
+
+    }
+
+
 
 
 
