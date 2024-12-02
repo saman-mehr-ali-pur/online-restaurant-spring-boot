@@ -59,4 +59,9 @@ public class UserService {
         user.setUsername(username);
         return userRepo.findByUsername(user);
     }
+
+
+    public void updatePassword(User user,String password){
+        userRepo.updatePassword(user , encoder.encode(password));
+    }
 }

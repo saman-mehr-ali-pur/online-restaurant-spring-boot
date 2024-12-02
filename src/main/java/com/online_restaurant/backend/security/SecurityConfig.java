@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -28,11 +29,11 @@ public class SecurityConfig {
 
 
 
-    @Bean
-    public BCryptPasswordEncoder getEncoder(){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-        return encoder;
-    }
+//    @Bean("encoder")
+//    public PasswordEncoder getEncoder(){
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+//        return encoder;
+//    }
 
     @Bean
     public DaoAuthenticationProvider getAuthenticatinProvider(){
@@ -64,7 +65,8 @@ public class SecurityConfig {
                                 requestMatchers(HttpMethod.GET,"/order/get/**").permitAll().
                                 requestMatchers(HttpMethod.GET,"/order/getall").permitAll().
                                 requestMatchers(HttpMethod.DELETE,"/order/delete/**").
-                                hasAnyAuthority(Role.ADMIN.name(),Role.USER.name());
+                                hasAnyAuthority(Role.ADMIN.name(),Role.USER.name()).
+                                requestMatchers(HttpMethod.POST,"/auth/**").permitAll();
 
                         auth.requestMatchers(HttpMethod.GET,"/user/get/**").permitAll().
                                 requestMatchers(HttpMethod.POST,"/user/save").permitAll().

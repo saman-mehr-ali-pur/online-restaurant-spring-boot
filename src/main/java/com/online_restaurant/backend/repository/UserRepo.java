@@ -63,8 +63,7 @@ public class UserRepo {
         try {
             em.persist(user);
         }catch (Exception e){
-            user = new User();
-            user.setId(-1);
+            e.printStackTrace();
         }
 
         em.getTransaction().commit();

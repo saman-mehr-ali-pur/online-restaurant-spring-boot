@@ -34,12 +34,16 @@ public class AuthService extends OncePerRequestFilter {
 
         String token = request.getHeader("Authentication");
 
-        if(token == null  || jwtService.isExpired(token)){
+        if(request.getRequestURL().toString().startsWith("http://localhost:8080/auth/")){
+            filterChain.doFilter(request,response);
+        }
+        System.out.println(token);
+
+        if(token == null  || !jwtService.isExpired(token.substring(7))){
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
-
-        token = token.substring(8).trim();
+        token = token.substring(7).trim();
 
         String username = jwtService.getClaims(token,"issue",String.class);
         String password = jwtService.getClaims(token,"pass",String.class);
